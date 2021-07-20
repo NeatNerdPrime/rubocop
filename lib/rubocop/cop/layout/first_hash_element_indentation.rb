@@ -91,6 +91,8 @@ module RuboCop
         end
 
         def on_send(node)
+          return if enforce_first_argument_with_fixed_indentation?
+
           each_argument_node(node, :hash) do |hash_node, left_parenthesis|
             check(hash_node, left_parenthesis)
           end
@@ -176,11 +178,21 @@ module RuboCop
             'Indent the right brace the same as the left brace.'
           elsif style == :special_inside_parentheses && left_parenthesis
             'Indent the right brace the same as the first position ' \
-            'after the preceding left parenthesis.'
+              'after the preceding left parenthesis.'
           else
             'Indent the right brace the same as the start of the line ' \
-            'where the left brace is.'
+              'where the left brace is.'
           end
+        end
+
+        def enforce_first_argument_with_fixed_indentation?
+          return false unless argument_alignment_config['Enabled']
+
+          argument_alignment_config['EnforcedStyle'] == 'with_fixed_indentation'
+        end
+
+        def argument_alignment_config
+          config.for_cop('Layout/ArgumentAlignment')
         end
       end
     end

@@ -130,7 +130,7 @@ AllCops:
   # What MRI version of the Ruby interpreter is the inspected code intended to
   # run on? (If there is more than one, set this to the lowest version.)
   # If a value is specified for TargetRubyVersion then it is used. Acceptable
-  # values are specificed as a float (i.e. 2.5); the teeny version of Ruby
+  # values are specificed as a float (i.e. 3.0); the teeny version of Ruby
   # should not be included. If the project specifies a Ruby version in the
   # .tool-versions or .ruby-version files, Gemfile or gems.rb file, RuboCop will
   # try to determine the desired version of Ruby by inspecting the
@@ -138,7 +138,7 @@ AllCops:
   # or gems.locked file. (Although the Ruby version is specified in the Gemfile
   # or gems.rb file, RuboCop reads the final value from the lock file.) If the
   # Ruby version is still unresolved, RuboCop will use the oldest officially
-  # supported Ruby version (currently Ruby 2.4).
+  # supported Ruby version (currently Ruby 2.5).
   TargetRubyVersion: ~
   # Determines if a notification for extension libraries should be shown when
   # rubocop is run. Keys are the name of the extension, and values are an array
@@ -173,6 +173,20 @@ Bundler/GemComment:
     - '**/gems.rb'
   IgnoredGems: []
   OnlyFor: []
+
+Bundler/GemVersion:
+  Description: 'Requires or forbids specifying gem versions.'
+  Enabled: false
+  VersionAdded: '1.14'
+  EnforcedStyle: 'required'
+  SupportedStyles:
+    - 'required'
+    - 'forbidden'
+  Include:
+    - '**/*.gemfile'
+    - '**/Gemfile'
+    - '**/gems.rb'
+  AllowedGems: []
 
 Bundler/InsecureProtocolSource:
   Description: >-
@@ -256,8 +270,8 @@ Layout/AccessModifierIndentation:
   SupportedStyles:
     - outdent
     - indent
-  # By default, the indentation width from Layout/IndentationWidth is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/ArgumentAlignment:
@@ -285,8 +299,8 @@ Layout/ArgumentAlignment:
   SupportedStyles:
     - with_first_argument
     - with_fixed_indentation
-  # By default, the indentation width from Layout/IndentationWidth is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/ArrayAlignment:
@@ -314,8 +328,8 @@ Layout/ArrayAlignment:
   SupportedStyles:
     - with_first_element
     - with_fixed_indentation
-  # By default, the indentation width from Layout/IndentationWidth is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/AssignmentIndentation:
@@ -325,8 +339,8 @@ Layout/AssignmentIndentation:
   Enabled: true
   VersionAdded: '0.49'
   VersionChanged: '0.77'
-  # By default, the indentation width from `Layout/IndentationWidth` is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/BeginEndAlignment:
@@ -363,18 +377,19 @@ Layout/BlockEndNewline:
   VersionAdded: '0.49'
 
 Layout/CaseIndentation:
-  Description: 'Indentation of when in a case/when/[else/]end.'
+  Description: 'Indentation of when in a case/(when|in)/[else/]end.'
   StyleGuide: '#indent-when-to-case'
   Enabled: true
   VersionAdded: '0.49'
+  VersionChanged: '1.16'
   EnforcedStyle: case
   SupportedStyles:
     - case
     - end
   IndentOneStep: false
-  # By default, the indentation width from `Layout/IndentationWidth` is used.
-  # But it can be overridden by setting this parameter.
-  # This only matters if `IndentOneStep` is `true`
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
+  # This only matters if `IndentOneStep` is `true`.
   IndentationWidth: ~
 
 Layout/ClassStructure:
@@ -651,8 +666,8 @@ Layout/FirstArgumentIndentation:
     # Same as `special_for_inner_method_call` except that the special rule only
     # applies if the outer method call encloses its arguments in parentheses.
     - special_for_inner_method_call_in_parentheses
-  # By default, the indentation width from `Layout/IndentationWidth` is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/FirstArrayElementIndentation:
@@ -678,8 +693,8 @@ Layout/FirstArrayElementIndentation:
     - special_inside_parentheses
     - consistent
     - align_brackets
-  # By default, the indentation width from `Layout/IndentationWidth` is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/FirstArrayElementLineBreak:
@@ -710,8 +725,8 @@ Layout/FirstHashElementIndentation:
     - special_inside_parentheses
     - consistent
     - align_braces
-  # By default, the indentation width from `Layout/IndentationWidth` is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/FirstHashElementLineBreak:
@@ -746,8 +761,8 @@ Layout/FirstParameterIndentation:
   SupportedStyles:
     - consistent
     - align_parentheses
-  # By default, the indentation width from `Layout/IndentationWidth` is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/HashAlignment:
@@ -757,7 +772,7 @@ Layout/HashAlignment:
   Enabled: true
   AllowMultipleStyles: true
   VersionAdded: '0.49'
-  VersionChanged: '0.77'
+  VersionChanged: '1.16'
   # Alignment of entries using hash rocket as separator. Valid values are:
   #
   # key - left alignment of keys
@@ -868,8 +883,8 @@ Layout/IndentationStyle:
   Enabled: true
   VersionAdded: '0.49'
   VersionChanged: '0.82'
-  # By default, the indentation width from Layout/IndentationWidth is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   # It is used during auto-correction to determine how many spaces should
   # replace each tab.
   IndentationWidth: ~
@@ -907,6 +922,20 @@ Layout/LeadingEmptyLines:
   Enabled: true
   VersionAdded: '0.57'
   VersionChanged: '0.77'
+
+Layout/LineEndStringConcatenationIndentation:
+  Description: >-
+                 Checks the indentation of the next line after a line that
+                 ends with a string literal and a backslash.
+  Enabled: pending
+  VersionAdded: '1.18'
+  EnforcedStyle: aligned
+  SupportedStyles:
+    - aligned
+    - indented
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
+  IndentationWidth: ~
 
 Layout/LineLength:
   Description: 'Checks that line length does not exceed the configured limit.'
@@ -1038,8 +1067,8 @@ Layout/MultilineMethodCallIndentation:
     - aligned
     - indented
     - indented_relative_to_receiver
-  # By default, the indentation width from Layout/IndentationWidth is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/MultilineMethodDefinitionBraceLayout:
@@ -1068,8 +1097,8 @@ Layout/MultilineOperationIndentation:
   SupportedStyles:
     - aligned
     - indented
-  # By default, the indentation width from `Layout/IndentationWidth` is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/ParameterAlignment:
@@ -1097,8 +1126,8 @@ Layout/ParameterAlignment:
   SupportedStyles:
     - with_first_parameter
     - with_fixed_indentation
-  # By default, the indentation width from Layout/IndentationWidth is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/RedundantLineBreak:
@@ -1113,6 +1142,11 @@ Layout/RescueEnsureAlignment:
   Description: 'Align rescues and ensures correctly.'
   Enabled: true
   VersionAdded: '0.49'
+
+Layout/SingleLineBlockChain:
+  Description: 'Put method call on a separate line if chained to a single line block.'
+  Enabled: false
+  VersionAdded: '1.14'
 
 Layout/SpaceAfterColon:
   Description: 'Use spaces after colons.'
@@ -1593,7 +1627,7 @@ Lint/EmptyBlock:
   Description: 'This cop checks for blocks without a body.'
   Enabled: pending
   VersionAdded: '1.1'
-  VersionChanged: '1.3'
+  VersionChanged: '1.15'
   AllowComments: true
   AllowEmptyLambdas: true
 
@@ -1625,6 +1659,12 @@ Lint/EmptyFile:
   Enabled: true
   AllowComments: true
   VersionAdded: '0.90'
+
+Lint/EmptyInPattern:
+  Description: 'Checks for the presence of `in` pattern branches without a body.'
+  Enabled: pending
+  AllowComments: true
+  VersionAdded: '1.16'
 
 Lint/EmptyInterpolation:
   Description: 'Checks for empty string interpolation.'
@@ -1769,7 +1809,7 @@ Lint/MissingCopEnableDirective:
 Lint/MissingSuper:
   Description: >-
                   This cop checks for the presence of constructors and lifecycle callbacks
-                  without calls to `super`'.
+                  without calls to `super`.
   Enabled: true
   VersionAdded: '0.89'
   VersionChanged: '1.4'
@@ -2073,6 +2113,7 @@ Lint/SymbolConversion:
   Description: 'Checks for unnecessary symbol conversions.'
   Enabled: pending
   VersionAdded: '1.9'
+  VersionChanged: '1.16'
   EnforcedStyle: strict
   SupportedStyles:
     - strict
@@ -2492,6 +2533,31 @@ Naming/HeredocDelimiterNaming:
   VersionAdded: '0.50'
   ForbiddenDelimiters:
     - !ruby/regexp '/(^|\s)(EO[A-Z]{1}|END)(\s|$)/'
+
+Naming/InclusiveLanguage:
+  Description: 'Recommend the use of inclusive language instead of problematic terms.'
+  Enabled: pending
+  VersionAdded: '1.18'
+  CheckIdentifiers: true
+  CheckConstants: true
+  CheckVariables: true
+  CheckStrings: false
+  CheckSymbols: true
+  CheckComments: true
+  CheckFilepaths: true
+  FlaggedTerms:
+    whitelist:
+      Regex: !ruby/regexp '/white[-_\s]?list/'
+      Suggestions:
+        - allowlist
+        - permit
+    blacklist:
+      Regex: !ruby/regexp '/black[-_\s]?list/'
+      Suggestions:
+        - denylist
+        - block
+    slave:
+      Suggestions: ['replica', 'secondary', 'follower']
 
 Naming/MemoizedInstanceVariableName:
   Description: >-
@@ -3084,6 +3150,7 @@ Style/CommentAnnotation:
     - HACK
     - REVIEW
     - NOTE
+  RequireColon: true
 
 Style/CommentedKeyword:
   Description: 'Do not place comments on the same line as certain keywords.'
@@ -3461,6 +3528,7 @@ Style/HashAsLastArrayItem:
 
 Style/HashConversion:
   Description: 'Avoid Hash[] in favor of ary.to_h or literal hashes.'
+  StyleGuide: '#avoid-hash-constructor'
   Enabled: pending
   VersionAdded: '1.10'
   VersionChanged: '1.11'
@@ -3470,8 +3538,10 @@ Style/HashEachMethods:
   Description: 'Use Hash#each_key and Hash#each_value.'
   StyleGuide: '#hash-each'
   Enabled: true
-  VersionAdded: '0.80'
   Safe: false
+  VersionAdded: '0.80'
+  VersionChanged: '1.16'
+  AllowedReceivers: []
 
 Style/HashExcept:
   Description: >-
@@ -3534,6 +3604,7 @@ Style/IdenticalConditionalBranches:
                  out of the conditional.
   Enabled: true
   VersionAdded: '0.36'
+  VersionChanged: '1.16'
 
 Style/IfInsideElse:
   Description: 'Finds if nodes inside else, which can be converted to elsif.'
@@ -3579,6 +3650,12 @@ Style/ImplicitRuntimeError:
                  message, rather than just a message.
   Enabled: false
   VersionAdded: '0.41'
+
+Style/InPatternThen:
+  Description: 'Checks for `in;` uses in `case` expressions.'
+  StyleGuide: '#no-in-pattern-semicolons'
+  Enabled: pending
+  VersionAdded: '1.16'
 
 Style/InfiniteLoop:
   Description: >-
@@ -3808,6 +3885,12 @@ Style/MultilineIfThen:
   VersionAdded: '0.9'
   VersionChanged: '0.26'
 
+Style/MultilineInPatternThen:
+  Description: 'Do not use `then` for multi-line `in` statement.'
+  StyleGuide: '#no-then'
+  Enabled: pending
+  VersionAdded: '1.16'
+
 Style/MultilineMemoization:
   Description: 'Wrap multiline memoizations in a `begin` and `end` block.'
   Enabled: true
@@ -3979,6 +4062,7 @@ Style/NilLambda:
   Description: 'Prefer `-> {}` to `-> { nil }`.'
   Enabled: pending
   VersionAdded: '1.3'
+  VersionChanged: '1.15'
 
 Style/NonNilCheck:
   Description: 'Checks for redundant nil checks.'
@@ -4164,6 +4248,16 @@ Style/Proc:
   Enabled: true
   VersionAdded: '0.9'
   VersionChanged: '0.18'
+
+Style/QuotedSymbols:
+  Description: 'Use a consistent style for quoted symbols.'
+  Enabled: pending
+  VersionAdded: '1.16'
+  EnforcedStyle: same_as_string_literals
+  SupportedStyles:
+    - same_as_string_literals
+    - single_quotes
+    - double_quotes
 
 Style/RaiseArgs:
   Description: 'Checks the arguments passed to raise/fail.'
@@ -4522,7 +4616,8 @@ Style/StringConcatenation:
   Enabled: true
   Safe: false
   VersionAdded: '0.89'
-  VersionChanged: '1.6'
+  VersionChanged: '1.18'
+  Mode: aggressive
 
 Style/StringHashKeys:
   Description: 'Prefer symbols instead of strings as hash keys.'
@@ -4632,6 +4727,12 @@ Style/TernaryParentheses:
     - require_parentheses_when_complex
   AllowSafeAssignment: true
 
+Style/TopLevelMethodDefinition:
+  Description: 'This cop looks for top-level method definitions.'
+  StyleGuide: '#top-level-methods'
+  Enabled: false
+  VersionAdded: '1.15'
+
 Style/TrailingBodyOnClass:
   Description: 'Class body goes below class statement.'
   Enabled: true
@@ -4718,7 +4819,7 @@ Style/TrivialAccessors:
   StyleGuide: '#attr_family'
   Enabled: true
   VersionAdded: '0.9'
-  VersionChanged: '0.77'
+  VersionChanged: '1.15'
   # When set to `false` the cop will suggest the use of accessor methods
   # in situations like:
   #
@@ -4737,7 +4838,7 @@ Style/TrivialAccessors:
   # on_exception :restart
   #
   # Commonly used in DSLs
-  AllowDSLWriters: false
+  AllowDSLWriters: true
   IgnoreClassMethods: false
   AllowedMethods:
     - to_ary

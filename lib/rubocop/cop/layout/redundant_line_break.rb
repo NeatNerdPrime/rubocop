@@ -42,8 +42,9 @@ module RuboCop
       #   # good
       #   foo(a) { |x| puts x }
       #
-      class RedundantLineBreak < Cop
+      class RedundantLineBreak < Base
         include CheckAssignment
+        extend AutoCorrector
 
         MSG = 'Redundant line break detected.'
 
@@ -55,22 +56,23 @@ module RuboCop
 
           return unless offense?(node) && !part_of_ignored_node?(node)
 
-          add_offense(node)
-          ignore_node(node)
+          register_offense(node)
         end
+
+        private
 
         def check_assignment(node, _rhs)
           return unless offense?(node)
 
-          add_offense(node)
+          register_offense(node)
+        end
+
+        def register_offense(node)
+          add_offense(node) do |corrector|
+            corrector.replace(node.source_range, to_single_line(node.source).strip)
+          end
           ignore_node(node)
         end
-
-        def autocorrect(node)
-          ->(corrector) { corrector.replace(node.source_range, to_single_line(node.source).strip) }
-        end
-
-        private
 
         def offense?(node)
           return false if configured_to_not_be_inspected?(node)
@@ -79,8 +81,20 @@ module RuboCop
         end
 
         def configured_to_not_be_inspected?(node)
+          return true if other_cop_takes_precedence?(node)
+
           !cop_config['InspectBlocks'] && (node.block_type? ||
-                                           node.each_child_node(:block).any?(&:multiline?))
+                                           node.each_descendant(:block).any?(&:multiline?))
+        end
+
+        def other_cop_takes_precedence?(node)
+          single_line_block_chain_enabled? && node.each_descendant(:block).any? do |block_node|
+            block_node.parent.send_type? && block_node.parent.loc.dot && !block_node.multiline?
+          end
+        end
+
+        def single_line_block_chain_enabled?
+          @config.for_cop('Layout/SingleLineBlockChain')['Enabled']
         end
 
         def suitable_as_single_line?(node)

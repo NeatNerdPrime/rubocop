@@ -855,46 +855,34 @@ RSpec.describe RuboCop::Cop::Lint::Void, :config do
     expect_no_corrections
   end
 
-  it 'registers two offenses for void literals in a `#each` method' do
+  it 'registers an offense only for non-last void literal in a `#each` method' do
     expect_offense(<<~RUBY)
       array.each do |_item|
         42
         ^^ Literal `42` used in void context.
         42
-        ^^ Literal `42` used in void context.
       end
     RUBY
 
     expect_correction(<<~RUBY)
       array.each do |_item|
+        42
       end
     RUBY
   end
 
-  it 'registers an offense for void constant in a `#each` method' do
-    expect_offense(<<~RUBY)
+  it 'does not register an offense for a constant as last expression in a `#each` method' do
+    expect_no_offenses(<<~RUBY)
       array.each do |_item|
         CONST
-        ^^^^^ Constant `CONST` used in void context.
-      end
-    RUBY
-
-    expect_correction(<<~RUBY)
-      array.each do |_item|
       end
     RUBY
   end
 
-  it 'handles `#each` block with single expression' do
-    expect_offense(<<~RUBY)
+  it 'does not register an offense for a literal as single expression in `#each` block' do
+    expect_no_offenses(<<~RUBY)
       array.each do |_item|
         42
-        ^^ Literal `42` used in void context.
-      end
-    RUBY
-
-    expect_correction(<<~RUBY)
-      array.each do |_item|
       end
     RUBY
   end

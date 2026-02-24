@@ -87,8 +87,9 @@ module RuboCop
         def on_block(node)
           return unless node.body && !node.body.begin_type?
           return unless in_void_context?(node.body)
+          return if node.method?(:each)
 
-          check_void_op(node.body) { node.method?(:each) }
+          check_void_op(node.body)
           check_expression(node.body)
         end
         alias on_numblock on_block
@@ -107,14 +108,10 @@ module RuboCop
 
         def check_begin(node)
           expressions = *node
-          expressions.pop unless in_void_context?(node)
+          inside_each_block = node.each_ancestor(:any_block).first&.method?(:each)
+          expressions.pop if !in_void_context?(node) || inside_each_block
           expressions.each do |expr|
-            check_void_op(expr) do
-              block_node = node.each_ancestor(:any_block).first
-
-              block_node&.method?(:each)
-            end
-
+            check_void_op(expr) { inside_each_block }
             check_expression(expr)
           end
         end

@@ -1723,7 +1723,7 @@ Lint/CopDirectiveSyntax:
 Lint/DataDefineOverride:
   Description: 'Disallow overriding the `Data` built-in methods via `Data.define`.'
   Enabled: pending
-  VersionAdded: '<<next>>'
+  VersionAdded: '1.85'
 
 Lint/Debugger:
   Description: 'Checks for debugger calls.'
@@ -2416,7 +2416,7 @@ Lint/SafeNavigationConsistency:
   Enabled: true
   SafeAutoCorrect: false
   VersionAdded: '0.55'
-  VersionChanged: '<<next>>'
+  VersionChanged: '1.85'
   AllowedMethods:
     - present?
     - blank?
@@ -2596,7 +2596,7 @@ Lint/UnreachableLoop:
 Lint/UnreachablePatternBranch:
   Description: 'Checks for unreachable `in` pattern branches after an unconditional catch-all pattern.'
   Enabled: pending
-  VersionAdded: '<<next>>'
+  VersionAdded: '1.85'
 
 Lint/UnusedBlockArgument:
   Description: 'Checks for unused block arguments.'
@@ -4161,7 +4161,7 @@ Style/FileOpen:
   Description: 'Checks for `File.open` without a block, which can leak file descriptors.'
   Enabled: pending
   Safe: false
-  VersionAdded: '<<next>>'
+  VersionAdded: '1.85'
 
 Style/FileRead:
   Description: 'Favor `File.(bin)read` convenience methods.'
@@ -4664,7 +4664,7 @@ Style/MapJoin:
   Description: 'Checks for redundant `map(&:to_s)` before `join`.'
   Enabled: pending
   Safe: false
-  VersionAdded: '<<next>>'
+  VersionAdded: '1.85'
 
 Style/MapToHash:
   Description: 'Prefer `to_h` with a block over `map.to_h`.'
@@ -5118,7 +5118,7 @@ Style/ObjectThen:
 Style/OneClassPerFile:
   Description: 'Checks that each source file defines at most one top-level class or module.'
   Enabled: pending
-  VersionAdded: '<<next>>'
+  VersionAdded: '1.85'
   AllowedClasses: []
 
 Style/OneLineConditional:
@@ -5215,7 +5215,7 @@ Style/PartitionInsteadOfDoubleSelect:
                 on the same receiver with the same block body.
   Enabled: pending
   Safe: false
-  VersionAdded: '<<next>>'
+  VersionAdded: '1.85'
 
 Style/PercentLiteralDelimiters:
   Description: 'Use `%`-literal delimiters consistently.'
@@ -5253,7 +5253,7 @@ Style/PredicateWithKind:
   Description: 'Prefer `any?(Klass)` to `any? { |x| x.is_a?(Klass) }`.'
   Enabled: pending
   SafeAutoCorrect: false
-  VersionAdded: '<<next>>'
+  VersionAdded: '1.85'
 
 Style/PreferredHashMethods:
   Description: 'Checks use of `has_key?` and `has_value?` Hash methods.'
@@ -5309,7 +5309,7 @@ Style/ReduceToHash:
   Description: 'Use `to_h { ... }` instead of `each_with_object`, `inject`, or `reduce` to build a hash.'
   Enabled: pending
   Safe: false
-  VersionAdded: '<<next>>'
+  VersionAdded: '1.85'
 
 Style/RedundantArgument:
   Description: 'Checks for a redundant argument passed to certain methods.'
@@ -5483,7 +5483,7 @@ Style/RedundantLineContinuation:
 Style/RedundantMinMaxBy:
   Description: 'Identifies places where `max_by`/`min_by` can be replaced by `max`/`min`.'
   Enabled: pending
-  VersionAdded: '<<next>>'
+  VersionAdded: '1.85'
 
 Style/RedundantParentheses:
   Description: "Checks for parentheses that seem not to serve any purpose."
@@ -5566,7 +5566,7 @@ Style/RedundantStructKeywordInit:
   Description: 'Checks for redundant `keyword_init` option for `Struct.new`.'
   Enabled: pending
   SafeAutoCorrect: false
-  VersionAdded: '<<next>>'
+  VersionAdded: '1.85'
 
 Style/RegexpLiteral:
   Description: 'Use / or %r around regular expressions.'
@@ -5678,13 +5678,13 @@ Style/SelectByKind:
   Description: 'Prefer grep/grep_v to select/reject/find/detect with a kind check.'
   Enabled: pending
   SafeAutoCorrect: false
-  VersionAdded: '<<next>>'
+  VersionAdded: '1.85'
 
 Style/SelectByRange:
   Description: 'Prefer grep/grep_v to select/reject/find/detect with a range check.'
   Enabled: pending
   SafeAutoCorrect: false
-  VersionAdded: '<<next>>'
+  VersionAdded: '1.85'
 
 Style/SelectByRegexp:
   Description: 'Prefer grep/grep_v to select/reject/find/detect with a regexp match.'
@@ -5950,7 +5950,7 @@ Style/TallyMethod:
   Description: 'Prefer `Enumerable#tally` over manual counting patterns.'
   Enabled: pending
   Safe: false
-  VersionAdded: '<<next>>'
+  VersionAdded: '1.85'
 
 Style/TernaryParentheses:
   Description: 'Checks for use of parentheses around ternary conditions.'

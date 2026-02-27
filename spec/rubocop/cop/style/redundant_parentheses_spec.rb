@@ -886,6 +886,44 @@ RSpec.describe RuboCop::Cop::Style::RedundantParentheses, :config do
     RUBY
   end
 
+  it 'accepts parentheses around an irange inside a block' do
+    expect_no_offenses(<<~RUBY)
+      something do
+        (a..b)
+      end
+    RUBY
+  end
+
+  it 'accepts parentheses around an erange inside a block' do
+    expect_no_offenses(<<~RUBY)
+      something do
+        (a...b)
+      end
+    RUBY
+  end
+
+  it 'accepts parentheses around an irange inside a braces block' do
+    expect_no_offenses(<<~RUBY)
+      something { (a..b) }
+    RUBY
+  end
+
+  it 'accepts parentheses around a beginless range inside a block' do
+    expect_no_offenses(<<~RUBY)
+      something do
+        (..b)
+      end
+    RUBY
+  end
+
+  it 'accepts parentheses around an endless range inside a block' do
+    expect_no_offenses(<<~RUBY)
+      something do
+        (a..)
+      end
+    RUBY
+  end
+
   it 'registers an offense when the use of parentheses around `&&` expressions in assignment' do
     expect_offense(<<~RUBY)
       var = (foo && bar)

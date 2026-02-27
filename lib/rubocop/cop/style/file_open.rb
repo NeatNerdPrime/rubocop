@@ -60,7 +60,7 @@ module RuboCop
 
         def on_send(node)
           return unless file_open?(node)
-          return if block_form?(node)
+          return if node.block_argument?
           return unless offensive_usage?(node)
 
           add_offense(node)
@@ -69,18 +69,14 @@ module RuboCop
 
         private
 
-        def block_form?(node)
-          node.block_argument? || node.parent&.block_type?
-        end
-
         def offensive_usage?(node)
           return true unless node.value_used?
 
-          node.parent&.assignment? || receiver_of_chained_call?(node)
+          node.parent.assignment? || receiver_of_chained_call?(node)
         end
 
         def receiver_of_chained_call?(node)
-          node.parent&.call_type? && node.parent.receiver == node
+          node.parent.receiver == node
         end
       end
     end

@@ -142,6 +142,32 @@ RSpec.describe RuboCop::Cop::Lint::UnusedPrivateMethod, :config do
       expect_no_offenses(source, '/lib/current.rb')
     end
 
+    it 'does not register an offense for runtime hook methods' do
+      source = <<~RUBY
+        class Service
+          private
+
+          def inherited(subclass)
+          end
+
+          def const_missing(name)
+          end
+
+          def method_added(name)
+          end
+
+          def singleton_method_undefined(name)
+          end
+
+          def coerce(other)
+          end
+        end
+      RUBY
+      cop.project_index = build_index('file:///lib/current.rb' => source)
+
+      expect_no_offenses(source, '/lib/current.rb')
+    end
+
     it 'does not register an offense for a singleton method' do
       source = <<~RUBY
         class Service
@@ -175,6 +201,32 @@ RSpec.describe RuboCop::Cop::Lint::UnusedPrivateMethod, :config do
       expect_no_offenses(source, '/lib/current.rb')
     end
 
+    it 'registers an offense when the file contains a binary string literal' do
+      source = <<~'RUBY'
+        class Service
+          DATA = "\xFF\xFE".b
+
+          private
+
+          def helper
+          end
+        end
+      RUBY
+      cop.project_index = build_index('file:///lib/current.rb' => source)
+
+      expect_offense(<<~'RUBY', '/lib/current.rb')
+        class Service
+          DATA = "\xFF\xFE".b
+
+          private
+
+          def helper
+          ^^^^^^^^^^ Private method `helper` appears to be unused.
+          end
+        end
+      RUBY
+    end
+
     it 'does not register an offense when the method name appears inside a string literal' do
       source = <<~RUBY
         class Service
@@ -189,6 +241,135 @@ RSpec.describe RuboCop::Cop::Lint::UnusedPrivateMethod, :config do
       cop.project_index = build_index('file:///lib/current.rb' => source)
 
       expect_no_offenses(source, '/lib/current.rb')
+    end
+
+    it 'does not register an offense when an interpolated symbol provides the name prefix' do
+      source = <<~'RUBY'
+        class Service
+          def call(type)
+            send(:"format_#{type}")
+          end
+
+          private
+
+          def format_octal
+          end
+
+          def format_hex
+          end
+        end
+      RUBY
+      cop.project_index = build_index('file:///lib/current.rb' => source)
+
+      expect_no_offenses(source, '/lib/current.rb')
+    end
+
+    it 'does not register an offense when an interpolated string provides the name prefix' do
+      source = <<~'RUBY'
+        class Service
+          def call(action)
+            send("do_#{action}")
+          end
+
+          private
+
+          def do_start
+          end
+        end
+      RUBY
+      cop.project_index = build_index('file:///lib/current.rb' => source)
+
+      expect_no_offenses(source, '/lib/current.rb')
+    end
+
+    it 'registers an offense for a private method not matching an interpolated prefix' do
+      source = <<~'RUBY'
+        class Service
+          def call(type)
+            send(:"format_#{type}")
+          end
+
+          private
+
+          def render_html
+          end
+        end
+      RUBY
+      cop.project_index = build_index('file:///lib/current.rb' => source)
+
+      expect_offense(<<~'RUBY', '/lib/current.rb')
+        class Service
+          def call(type)
+            send(:"format_#{type}")
+          end
+
+          private
+
+          def render_html
+          ^^^^^^^^^^^^^^^ Private method `render_html` appears to be unused.
+          end
+        end
+      RUBY
+    end
+
+    it 'registers an offense when the interpolated name has no literal prefix' do
+      source = <<~'RUBY'
+        class Service
+          def call(type)
+            send(:"#{type}_format")
+          end
+
+          private
+
+          def octal_format
+          end
+        end
+      RUBY
+      cop.project_index = build_index('file:///lib/current.rb' => source)
+
+      expect_offense(<<~'RUBY', '/lib/current.rb')
+        class Service
+          def call(type)
+            send(:"#{type}_format")
+          end
+
+          private
+
+          def octal_format
+          ^^^^^^^^^^^^^^^^ Private method `octal_format` appears to be unused.
+          end
+        end
+      RUBY
+    end
+
+    it 'does not treat a mid-string fragment as a name prefix' do
+      source = <<~'RUBY'
+        class Service
+          def call(type, suffix)
+            send(:"#{type}format_#{suffix}")
+          end
+
+          private
+
+          def format_octal
+          end
+        end
+      RUBY
+      cop.project_index = build_index('file:///lib/current.rb' => source)
+
+      expect_offense(<<~'RUBY', '/lib/current.rb')
+        class Service
+          def call(type, suffix)
+            send(:"#{type}format_#{suffix}")
+          end
+
+          private
+
+          def format_octal
+          ^^^^^^^^^^^^^^^^ Private method `format_octal` appears to be unused.
+          end
+        end
+      RUBY
     end
 
     # Symbol-based references from other files cannot be detected; this is
@@ -211,6 +392,76 @@ RSpec.describe RuboCop::Cop::Lint::UnusedPrivateMethod, :config do
           end
         end
       RUBY
+    end
+
+    context 'with AllowedNames' do
+      let(:cop_config) { { 'AllowedNames' => ['attribute?'] } }
+
+      it 'does not register an offense for an allowed name' do
+        source = <<~RUBY
+          class Contact
+            private
+
+            def attribute?
+            end
+          end
+        RUBY
+        cop.project_index = build_index('file:///lib/current.rb' => source)
+
+        expect_no_offenses(source, '/lib/current.rb')
+      end
+
+      it 'registers an offense for a name that is not allowed' do
+        cop.project_index = index_with_current
+
+        expect_offense(<<~RUBY, '/lib/current.rb')
+          class Service
+            def call
+            end
+
+            private
+
+            def helper
+            ^^^^^^^^^^ Private method `helper` appears to be unused.
+            end
+          end
+        RUBY
+      end
+    end
+
+    context 'with AllowedPatterns' do
+      let(:cop_config) { { 'AllowedPatterns' => ['_hook\z'] } }
+
+      it 'does not register an offense for a name matching an allowed pattern' do
+        source = <<~RUBY
+          class Service
+            private
+
+            def before_save_hook
+            end
+          end
+        RUBY
+        cop.project_index = build_index('file:///lib/current.rb' => source)
+
+        expect_no_offenses(source, '/lib/current.rb')
+      end
+
+      it 'registers an offense for a name not matching any allowed pattern' do
+        cop.project_index = index_with_current
+
+        expect_offense(<<~RUBY, '/lib/current.rb')
+          class Service
+            def call
+            end
+
+            private
+
+            def helper
+            ^^^^^^^^^^ Private method `helper` appears to be unused.
+            end
+          end
+        RUBY
+      end
     end
 
     describe 'the reference-name cache' do
